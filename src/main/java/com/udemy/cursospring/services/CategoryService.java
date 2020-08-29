@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.udemy.cursospring.domain.Category;
 import com.udemy.cursospring.repositories.CategoryRepository;
+import com.udemy.cursospring.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoryService {
@@ -19,7 +20,9 @@ public class CategoryService {
 	}
 	
 	public Category getCategoryById(Integer id) {
-		return categoryRepository.findById(id).orElse(null);
+		return categoryRepository.findById(id).orElseThrow(
+				() -> new ObjectNotFoundException("Category not found. Id = " + id)
+			);
 	}
 
 }
