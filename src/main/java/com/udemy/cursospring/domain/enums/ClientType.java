@@ -27,7 +27,7 @@ public enum ClientType {
 		}
 		
 		for (ClientType type : ClientType.values()) {
-			if(code.equals(type))
+			if(code.equals(type.getCode()))
 				return type;
 		}
 		

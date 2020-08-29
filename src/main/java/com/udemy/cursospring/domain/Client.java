@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.udemy.cursospring.domain.enums.ClientType;
 
 @Entity
@@ -35,7 +36,8 @@ public class Client implements Serializable {
 	@CollectionTable(name = "PHONE")
 	private Set<String> phones = new HashSet<>();
 
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client")
+	@JsonManagedReference
+	@OneToMany(mappedBy = "client")
 	private List<Address> addresses = new ArrayList<>();
 
 	public Client() {
