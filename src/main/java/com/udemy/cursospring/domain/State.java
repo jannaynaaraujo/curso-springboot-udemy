@@ -24,7 +24,7 @@ public class State implements Serializable {
 	private String name;
 	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "state")
-	private List<City> cities = new ArrayList<City>();
+	private List<City> cities = new ArrayList<>();
 
 	public State() {
 
@@ -54,7 +54,7 @@ public class State implements Serializable {
 
 	public List<City> getCities() {
 		if(isNull(this.cities)) {
-			return new ArrayList<City>();
+			return new ArrayList<>();
 		}
 		return cities;
 	}

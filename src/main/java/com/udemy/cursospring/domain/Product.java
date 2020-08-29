@@ -34,7 +34,7 @@ public class Product implements Serializable {
 		joinColumns = @JoinColumn(name = "product_id"), 
 		inverseJoinColumns = @JoinColumn(name = "category_id")
 	)
-	private List<Category> categories = new ArrayList<Category>();
+	private List<Category> categories = new ArrayList<>();
 
 	public Product() {
 
@@ -73,7 +73,7 @@ public class Product implements Serializable {
 
 	public List<Category> getCategories() {
 		if (isNull(this.categories)) {
-			return new ArrayList<Category>();
+			return new ArrayList<>();
 		}
 		return categories;
 	}
