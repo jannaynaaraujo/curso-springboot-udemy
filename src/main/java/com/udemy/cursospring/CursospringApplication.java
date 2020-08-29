@@ -8,9 +8,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.udemy.cursospring.domain.Category;
+import com.udemy.cursospring.domain.City;
 import com.udemy.cursospring.domain.Product;
+import com.udemy.cursospring.domain.State;
 import com.udemy.cursospring.repositories.CategoryRepository;
+import com.udemy.cursospring.repositories.CityRepository;
 import com.udemy.cursospring.repositories.ProductRepository;
+import com.udemy.cursospring.repositories.StateRepository;
 
 @SpringBootApplication
 public class CursospringApplication implements CommandLineRunner{
@@ -20,6 +24,12 @@ public class CursospringApplication implements CommandLineRunner{
 	
 	@Autowired
 	private ProductRepository productRepository;
+	
+	@Autowired
+	private StateRepository stateRepository;
+	
+	@Autowired
+	private CityRepository cityRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -39,11 +49,23 @@ public class CursospringApplication implements CommandLineRunner{
 		
 		computador.getCategories().add(informatica);
 		impressora.getCategories().addAll(Arrays.asList(informatica, escritorio));
-		mouse.getCategories().add(informatica);
-		
+		mouse.getCategories().add(informatica);		
 		
 		categoryRepository.saveAll(Arrays.asList(informatica, escritorio));
 		productRepository.saveAll(Arrays.asList(computador, impressora, mouse));
+		
+		State sp = new State(null, "SP");
+		State mg = new State(null, "MG");
+		
+		City saoPaulo = new City(null, "São Paulo", sp);
+		City campinas = new City(null, "Campinas", sp);
+		City beloHorizonte = new City(null, "Belo Horizonte", mg);
+		
+		sp.getCities().addAll(Arrays.asList(saoPaulo, campinas));
+		mg.getCities().add(beloHorizonte);
+		
+		stateRepository.saveAll(Arrays.asList(sp, mg));
+		cityRepository.saveAll(Arrays.asList(saoPaulo, campinas, beloHorizonte));
 		
 	}
 
