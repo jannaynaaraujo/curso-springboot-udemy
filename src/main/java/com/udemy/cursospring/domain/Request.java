@@ -2,6 +2,9 @@ package com.udemy.cursospring.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import static java.util.Objects.isNull;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -36,6 +40,9 @@ public class Request implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "address_id")
 	private Address address;
+	
+	@OneToMany(mappedBy = "id.request")
+	private Set<RequestItem> itens = new HashSet<>();
 
 	public Request() {
 
@@ -88,6 +95,18 @@ public class Request implements Serializable {
 	public void setAddress(Address address) {
 		this.address = address;
 	}
+	
+	public Set<RequestItem> getItens() {
+		if(isNull(itens)) {
+			return new HashSet<>();
+		}
+		return itens;
+	}
+
+	public void setItens(Set<RequestItem> itens) {
+		this.itens = itens;
+	}
+
 
 	@Override
 	public int hashCode() {
@@ -113,5 +132,6 @@ public class Request implements Serializable {
 			return false;
 		return true;
 	}
+
 
 }

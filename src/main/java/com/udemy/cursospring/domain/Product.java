@@ -4,7 +4,9 @@ import static java.util.Objects.isNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -29,11 +32,11 @@ public class Product implements Serializable {
 
 	@JsonBackReference
 	@ManyToMany
-	@JoinTable(name = "PRODUCT_CATEGORY", 
-		joinColumns = @JoinColumn(name = "product_id"), 
-		inverseJoinColumns = @JoinColumn(name = "category_id")
-	)
+	@JoinTable(name = "PRODUCT_CATEGORY", joinColumns = @JoinColumn(name = "product_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private List<Category> categories = new ArrayList<>();
+
+	@OneToMany(mappedBy = "id.product")
+	private Set<RequestItem> itens = new HashSet<>();
 
 	public Product() {
 
@@ -79,6 +82,24 @@ public class Product implements Serializable {
 
 	public void setCategories(List<Category> categories) {
 		this.categories = categories;
+	}
+
+	public Set<RequestItem> getItens() {
+		if (isNull(itens)) {
+			return new HashSet<>();
+		}
+		return itens;
+	}
+
+	public void setItens(Set<RequestItem> itens) {
+		this.itens = itens;
+	}
+	
+	public List<Product> getProducts(){
+		List<Product> products = new ArrayList<>();
+		this.itens.forEach(item -> products.add(item.getProduct()));
+		
+		return products;
 	}
 
 	@Override

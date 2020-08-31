@@ -17,6 +17,7 @@ import com.udemy.cursospring.domain.PaymentWithCard;
 import com.udemy.cursospring.domain.PaymentWithSlip;
 import com.udemy.cursospring.domain.Product;
 import com.udemy.cursospring.domain.Request;
+import com.udemy.cursospring.domain.RequestItem;
 import com.udemy.cursospring.domain.State;
 import com.udemy.cursospring.domain.enums.ClientType;
 import com.udemy.cursospring.domain.enums.PaymentStatus;
@@ -26,6 +27,7 @@ import com.udemy.cursospring.repositories.CityRepository;
 import com.udemy.cursospring.repositories.ClientRepository;
 import com.udemy.cursospring.repositories.PaymentRepository;
 import com.udemy.cursospring.repositories.ProductRepository;
+import com.udemy.cursospring.repositories.RequestItemRepository;
 import com.udemy.cursospring.repositories.RequestRepository;
 import com.udemy.cursospring.repositories.StateRepository;
 
@@ -55,6 +57,9 @@ public class CursospringApplication implements CommandLineRunner{
 	
 	@Autowired
 	private PaymentRepository paymentRepository;
+	
+	@Autowired
+	private RequestItemRepository requestItemRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -117,6 +122,19 @@ public class CursospringApplication implements CommandLineRunner{
 		
 		requestRepository.saveAll(Arrays.asList(request1, request2));
 		paymentRepository.saveAll(Arrays.asList(payment1, payment2));
+		
+		RequestItem requestItem1 = new RequestItem(request1, computador, 0.0, 1, 2000.00);
+		RequestItem requestItem2 = new RequestItem(request1, mouse, 0.0, 1, 80.00);
+		RequestItem requestItem3 = new RequestItem(request2, impressora, 0.0, 1, 800.00);
+		
+		request1.getItens().addAll(Arrays.asList(requestItem1, requestItem2));
+		request2.getItens().addAll(Arrays.asList(requestItem3));
+		
+		computador.getItens().addAll(Arrays.asList(requestItem1));
+		mouse.getItens().addAll(Arrays.asList(requestItem2));
+		impressora.getItens().addAll(Arrays.asList(requestItem3));
+		
+		requestItemRepository.saveAll(Arrays.asList(requestItem1, requestItem2, requestItem3));
 	}
 
 }
