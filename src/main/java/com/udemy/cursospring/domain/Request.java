@@ -1,40 +1,52 @@
 package com.udemy.cursospring.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
-public class City implements Serializable {
+public class Request implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String name;
-	
+	private Date instant;
+
+	@JsonManagedReference
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "request")
+	private Payment payment;
+
 	@JsonManagedReference
 	@ManyToOne
-	@JoinColumn(name = "state_id")
-	private State state;
+	@JoinColumn(name = "client_id")
+	private Client client;
 
-	public City() {
+	@ManyToOne
+	@JoinColumn(name = "address_id")
+	private Address address;
+
+	public Request() {
 
 	}
 
-	public City(Integer id, String name, State state) {
+	public Request(Integer id, Date instant, Client client, Address address) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.state = state;
+		this.instant = instant;
+		this.client = client;
+		this.address = address;
 	}
 
 	public Integer getId() {
@@ -45,20 +57,36 @@ public class City implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Date getInstant() {
+		return instant;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setInstant(Date instant) {
+		this.instant = instant;
 	}
 
-	public State getState() {
-		return state;
+	public Payment getPayment() {
+		return payment;
 	}
 
-	public void setState(State state) {
-		this.state = state;
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 
 	@Override
@@ -77,7 +105,7 @@ public class City implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		City other = (City) obj;
+		Request other = (Request) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

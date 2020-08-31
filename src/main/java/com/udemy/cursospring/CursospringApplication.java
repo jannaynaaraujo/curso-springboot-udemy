@@ -1,5 +1,6 @@
 package com.udemy.cursospring;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,21 @@ import com.udemy.cursospring.domain.Address;
 import com.udemy.cursospring.domain.Category;
 import com.udemy.cursospring.domain.City;
 import com.udemy.cursospring.domain.Client;
+import com.udemy.cursospring.domain.Payment;
+import com.udemy.cursospring.domain.PaymentWithCard;
+import com.udemy.cursospring.domain.PaymentWithSlip;
 import com.udemy.cursospring.domain.Product;
+import com.udemy.cursospring.domain.Request;
 import com.udemy.cursospring.domain.State;
 import com.udemy.cursospring.domain.enums.ClientType;
+import com.udemy.cursospring.domain.enums.PaymentStatus;
 import com.udemy.cursospring.repositories.AddressRepository;
 import com.udemy.cursospring.repositories.CategoryRepository;
 import com.udemy.cursospring.repositories.CityRepository;
 import com.udemy.cursospring.repositories.ClientRepository;
+import com.udemy.cursospring.repositories.PaymentRepository;
 import com.udemy.cursospring.repositories.ProductRepository;
+import com.udemy.cursospring.repositories.RequestRepository;
 import com.udemy.cursospring.repositories.StateRepository;
 
 @SpringBootApplication
@@ -41,6 +49,12 @@ public class CursospringApplication implements CommandLineRunner{
 	
 	@Autowired
 	private AddressRepository addressRepository;
+	
+	@Autowired
+	private RequestRepository requestRepository;
+	
+	@Autowired
+	private PaymentRepository paymentRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursospringApplication.class, args);
@@ -78,7 +92,7 @@ public class CursospringApplication implements CommandLineRunner{
 		stateRepository.saveAll(Arrays.asList(sp, mg));
 		cityRepository.saveAll(Arrays.asList(saoPaulo, campinas, beloHorizonte));
 		
-		Client jannayna = new Client(null, "Jannayna Araujo", "jannayna@Gmail.com", "10008065454", ClientType.PESSOA_FISICA);
+		Client jannayna = new Client(null, "Jannayna Araujo", "jannayna@Gmail.com", "10008065454", ClientType.PHYSICAL_PERSON);
 		jannayna.getPhones().addAll(Arrays.asList("83996548665", "41996548665"));
 		
 		Address address1 = new Address(null, "Rua Eduardo Carlos Pereira", 3234, "ap 102", "Portão", "80610-170", saoPaulo, jannayna);
@@ -88,6 +102,21 @@ public class CursospringApplication implements CommandLineRunner{
 		
 		clientRepository.save(jannayna);
 		addressRepository.saveAll(Arrays.asList(address1, address2));
+		
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Request request1 = new Request(null, simpleDateFormat.parse("01/09/2020 20:00"), jannayna, address1);
+		Request request2 = new Request(null, simpleDateFormat.parse("02/09/2021 20:00"), jannayna, address2);
+		
+		Payment payment1 = new PaymentWithCard(null, PaymentStatus.SETTLED, request1, 10);
+		Payment payment2 = new PaymentWithSlip(null, PaymentStatus.PENDING, request2, simpleDateFormat.parse("02/09/2021 20:00") , null);
+		
+		request1.setPayment(payment1);
+		request2.setPayment(payment2);
+		
+		jannayna.getRequests().addAll(Arrays.asList(request1, request2));
+		
+		requestRepository.saveAll(Arrays.asList(request1, request2));
+		paymentRepository.saveAll(Arrays.asList(payment1, payment2));
 	}
 
 }

@@ -1,21 +1,22 @@
 package com.udemy.cursospring.domain;
 
+import static java.util.Objects.isNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import static java.util.Objects.isNull;
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.udemy.cursospring.domain.enums.ClientType;
 
@@ -31,7 +32,7 @@ public class Client implements Serializable {
 	private String email;
 	private String cpfOrCnpj;
 	private Integer type;
-	
+
 	@ElementCollection
 	@CollectionTable(name = "PHONE")
 	private Set<String> phones = new HashSet<>();
@@ -39,6 +40,10 @@ public class Client implements Serializable {
 	@JsonManagedReference
 	@OneToMany(mappedBy = "client")
 	private List<Address> addresses = new ArrayList<>();
+
+	@JsonBackReference
+	@OneToMany(mappedBy = "client")
+	private List<Request> requests = new ArrayList<>();
 
 	public Client() {
 
@@ -94,6 +99,9 @@ public class Client implements Serializable {
 	}
 
 	public List<Address> getAddresses() {
+		if(isNull(this.addresses)) {
+			return new ArrayList<>();
+		}
 		return addresses;
 	}
 
@@ -102,7 +110,7 @@ public class Client implements Serializable {
 	}
 
 	public Set<String> getPhones() {
-		if(isNull(this.phones)) {
+		if (isNull(this.phones)) {
 			return new HashSet<>();
 		}
 		return phones;
@@ -110,6 +118,21 @@ public class Client implements Serializable {
 
 	public void setPhones(Set<String> phones) {
 		this.phones = phones;
+	}
+
+	public List<Request> getRequests() {
+		if(isNull(this.requests)) {
+			return new ArrayList<>();
+		}
+		return requests;
+	}
+
+	public void setRequests(List<Request> requests) {
+		this.requests = requests;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 
 	@Override
