@@ -28,5 +28,12 @@ public class CategoryService {
 		category.setId(null);
 		return categoryRepository.save(category);
 	}
+	
+	public Category updateCategory(Category category, Integer id) {
+		category.setId(id);
+		getCategoryById(id);
+		return categoryRepository.save(category);
+	}
+
 
 }
