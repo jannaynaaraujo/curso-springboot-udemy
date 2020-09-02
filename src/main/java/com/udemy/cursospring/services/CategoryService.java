@@ -11,18 +11,22 @@ import com.udemy.cursospring.services.exceptions.ObjectNotFoundException;
 
 @Service
 public class CategoryService {
-	
+
 	@Autowired
 	private CategoryRepository categoryRepository;
-	
+
 	public List<Category> getCategories() {
 		return categoryRepository.findAll();
 	}
-	
+
 	public Category getCategoryById(Integer id) {
-		return categoryRepository.findById(id).orElseThrow(
-				() -> new ObjectNotFoundException("Category not found. Id = " + id)
-			);
+		return categoryRepository.findById(id)
+				.orElseThrow(() -> new ObjectNotFoundException("Category not found. Id = " + id));
+	}
+
+	public Category createCategory(Category category) {
+		category.setId(null);
+		return categoryRepository.save(category);
 	}
 
 }
